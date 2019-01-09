@@ -39,6 +39,8 @@ int create_a_listening_socket(const char *const srv_port, const int maxconn){
   /* hint stream socket */
   /* hint for wildcard IP address */
 
+  if (getaddrinfo("127.0.0.1", "44444", &hints, &result) != 0)
+    perror("Erreur de récupération des informations de connexions");
 
   /* Récupération des paramètres de création de la socket */
   
