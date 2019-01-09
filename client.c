@@ -36,18 +36,34 @@ int connect_to_server(const char *const srv_name, const char *const srv_port){
   struct addrinfo hints;
   struct addrinfo *result = NULL, *rp = NULL;
   int ret_code;
-  
-    
+
+  hints.ai_family = AF_INET;
+  hints.ai_socktype = SOCK_STREAM;
+  hints.ai_protocol = 0;
   //struct in_addr ip_addr;
   int clt_sock = -1;
 
   memset(&hints, 0, sizeof(struct addrinfo));
 
   /* Récupération des informations de connexion au serveur */
+
+  if (getaddrinfo("127.0.0.1", SRV_PORT, &hints, &result) != 0)
+    PERROR("Erreur de récupération des informations de connexion");
  
   for (rp = result; rp != NULL; rp = rp->ai_next) {
     /* Tentative création de la socket */
+    int sock = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+
+    if (sock == -1)
+      PERROR("Erreur lors de la création du soscket");
+
     /* Tentative connexion au serveur */
+
+    if (connect(sock, rp->ai_addr, rp->ai_addrlen) == -1)
+      PERROR("Erreur lors de la tentative de connexion");
+
+
+
     /* Sinon, essayer l'entrée suivante */
   }
   
