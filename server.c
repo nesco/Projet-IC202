@@ -101,7 +101,7 @@ int accept_clt_conn(const int srv_sock, struct sockaddr_in *const clt_sockaddr){
   
   /* mise en attente de demande de conexion sur la socket */
 
-  if (accept(srv_sock, clt_sockaddr, addrlen) == -1)
+  if (accept(srv_sock, clt_sockaddr, &addrlen) == -1)
     perror("Erreur lors de l'acceptation du socket");
 
   DEBUG("connexion accepté");
@@ -109,7 +109,7 @@ int accept_clt_conn(const int srv_sock, struct sockaddr_in *const clt_sockaddr){
   return clt_sock;
 }
 
-int main(int argc, char *argv[])
+    int main(int argc, char *argv[])
 {
   signal(SIGINT, sig_handler);
   signal(SIGPIPE, sig_handler);
@@ -118,13 +118,12 @@ int main(int argc, char *argv[])
 
   /* création de la socket d'écoute */
 
-  create_a_listening_socket(SRV_PORT, MAX_CONN);
+  int clt_sock = create_a_listening_socket(SRV_PORT, MAX_CONN);
   
   /* initialisation du salon de discussion */
   initialize_chat_room();
     
   while (1){
-    int clt_sock;
     struct sockaddr_in clt_sockaddr;
     char *clt_ip;
     int clt_port;
@@ -138,7 +137,7 @@ int main(int argc, char *argv[])
     clt_ip = inet_ntoa(clt_sockaddr.sin_addr);
     clt_port = ntohs(clt_sockaddr.sin_port);
 
-    login = clt_authentification(clt_sock);
+    login = clt_authentication(clt_sock);
     
     /* Enregistrement du client dans le salon */
     if ( login_chatroom(clt_sock, clt_ip, clt_port) != 0 ) 

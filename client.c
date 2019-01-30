@@ -16,7 +16,8 @@ void sig_handler(int s)
       msg.type = END_OK;
       msg.size = 0;
       
-      send(clt_sock, &msg, HEADER_SIZE, 0);
+      send_msg(clt_sock, msg.type, 0, NULL);
+      //send(clt_sock, &msg, HEADER_SIZE, 0);
   
       close(clt_sock);
       exit(EXIT_SUCCESS);
@@ -49,20 +50,23 @@ int connect_to_server(const char *const srv_name, const char *const srv_port){
 
   if (getaddrinfo("127.0.0.1", SRV_PORT, &hints, &result) != 0)
     PERROR("Erreur de récupération des informations de connexion");
- 
+
+// Boucle sur les interfaces réseaux 
   for (rp = result; rp != NULL; rp = rp->ai_next) {
     /* Tentative création de la socket */
-    int sock = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+    clt_sock = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
 
-    if (sock == -1)
+    if (clt_sock == -1)
       PERROR("Erreur lors de la création du soscket");
 
     /* Tentative connexion au serveur */
 
-    if (connect(sock, rp->ai_addr, rp->ai_addrlen) == -1)
+    if (connect(clt_sock, rp->ai_addr, rp->ai_addrlen) == -1)
+    {
       PERROR("Erreur lors de la tentative de connexion");
-
-
+    }
+    else
+      break;
 
     /* Sinon, essayer l'entrée suivante */
   }

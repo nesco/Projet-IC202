@@ -31,7 +31,6 @@ void new_client(int s)
     }
 }
 
-void *chatroom(void *arg);
 
 void initialize_chat_room()
 {
@@ -314,9 +313,9 @@ void *chatroom(void *arg)
       int clt_sock;
       int nfds;
       
-      //unsigned char code;
-      //uint16_t size;
-      //char *data;
+      unsigned char code;
+      int16_t size;
+      char *data;
       
       FD_ZERO(&rset);
 
@@ -370,6 +369,7 @@ void *chatroom(void *arg)
 	     discussion. La fonction deregister_client(i) permet de retirer le client i.
 
 	  */
+
 	}
       
     } /* while (1) */

@@ -7,5 +7,6 @@
 void initialize_chat_room();
 void stop_chat_room();
 int login_chatroom(const int clt_sock, const char *const ip, const int port);
+void *chatroom(void *arg);
 
 #endif /* CHATROOM_H */
